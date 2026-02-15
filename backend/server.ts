@@ -4,11 +4,82 @@ import { Pool } from 'pg';
 import cors from 'cors';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { registerObjectStorageRoutes } from './replit_integrations/object_storage/index.js';
 
 dotenv.config();
+
+// --- Local file upload (used when not on Replit / no PRIVATE_OBJECT_DIR, e.g. Railway) ---
+const __filenameStorage = fileURLToPath(import.meta.url);
+const __dirnameStorage = path.dirname(__filenameStorage);
+const UPLOADS_DIR = path.resolve(__dirnameStorage, '..', 'uploads');
+const pendingUploads = new Set<string>();
+
+function registerLocalUploadRoutes(app: express.Express) {
+  if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  }
+  const localDir = path.join(UPLOADS_DIR, 'local');
+  if (!fs.existsSync(localDir)) {
+    fs.mkdirSync(localDir, { recursive: true });
+  }
+
+  app.post('/api/uploads/request-url', (req: Request, res: Response) => {
+    const { name, size, contentType } = req.body;
+    const type = contentType || req.body.type;
+    if (!name) {
+      return res.status(400).json({ error: 'Missing required field: name' });
+    }
+    const id = crypto.randomUUID();
+    pendingUploads.add(id);
+    const base = process.env.PUBLIC_URL || '';
+    const uploadURL = `${base}/api/uploads/accept/${id}`;
+    const objectPath = `/objects/uploads/local/${id}`;
+    res.json({ uploadURL, objectPath, metadata: { name, size, contentType: type } });
+  });
+
+  app.put('/api/uploads/accept/:id', (req: Request, res: Response) => {
+    const id = (req.params as { id?: string }).id ?? '';
+    if (!id || id.includes('..') || !pendingUploads.has(id)) {
+      return res.status(400).json({ error: 'Invalid or expired upload token' });
+    }
+    pendingUploads.delete(id);
+    const contentType = (req.headers['content-type'] as string) || 'application/octet-stream';
+    const filePath = path.join(UPLOADS_DIR, 'local', id);
+    const metaPath = filePath + '.meta';
+    const stream = fs.createWriteStream(filePath);
+    req.pipe(stream);
+    stream.on('finish', () => {
+      fs.writeFileSync(metaPath, contentType, 'utf8');
+      res.status(200).end();
+    });
+    stream.on('error', (err) => {
+      console.error('Upload write error:', err);
+      try { fs.unlinkSync(filePath); } catch (_) {}
+      res.status(500).json({ error: 'Failed to save file' });
+    });
+  });
+
+  app.get('/objects/uploads/local/:id', (req: Request, res: Response) => {
+    const id = (req.params as { id?: string }).id ?? '';
+    if (!id || id.includes('..')) {
+      return res.status(400).json({ error: 'Invalid path' });
+    }
+    const filePath = path.join(UPLOADS_DIR, 'local', id);
+    const metaPath = filePath + '.meta';
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    const contentType = fs.existsSync(metaPath)
+      ? fs.readFileSync(metaPath, 'utf8').trim()
+      : 'application/octet-stream';
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    fs.createReadStream(filePath).pipe(res);
+  });
+}
 
 // Hardcoded admin credentials (username: admin, password: qwe-12345)
 const ADMIN_USERS = [{ username: 'admin', password: 'qwe-12345' }];
@@ -477,6 +548,7 @@ if (isReplit && hasPrivateDir) {
   registerObjectStorageRoutes(app);
 } else {
   console.log('🟢 Using local file upload (Replit storage disabled)');
+  registerLocalUploadRoutes(app);
 }
 
 
