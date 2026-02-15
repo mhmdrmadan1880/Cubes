@@ -955,16 +955,17 @@ const App: React.FC = () => {
   const progressPercent = (step / 2) * 100;
 
   if (confirmedOrder) {
-    // Use local state for items/customer (API may not return them); fallback to confirmedOrder with guards
-    const orderItems = confirmedOrder.items ?? selectedColors;
-    const cust = confirmedOrder.customer ?? customer;
+    const order = confirmedOrder as Order & { pack_size?: number; total_price?: number };
+    const packSizeVal = order.packSize ?? order.pack_size ?? packSize ?? 0;
+    const totalPriceVal = order.totalPrice ?? order.total_price ?? (storeSettings?.pack_prices && packSizeVal ? (storeSettings.pack_prices[String(packSizeVal)] ?? 0) : 0);
+    const orderItems = order.items ?? selectedColors;
     const safeItems = Array.isArray(orderItems) ? orderItems : [];
     const getColorName = (code: string) => inventory.find(i => i.colorCode === code)?.[lang === 'ar' ? 'nameAr' : 'nameEn'] || code;
     const itemsLine = safeItems.map((i: OrderItem) => `• ${getColorName(i.colorCode)} x${i.qty}`).join('\n');
-    const preferredTimeLabel = (cust?.preferredTime === 'Evening' ? t.evening : t.morning);
+    const preferredTimeLabel = (customer.preferredTime === 'Evening' ? t.evening : t.morning);
     const whatsappBody = lang === 'ar'
-      ? `*طلب جديد - Cupify*\n\n${t.orderCode}: ${confirmedOrder.orderCode}\n*الحجم:* ${confirmedOrder.packSize} ${t.cups}\n\n*الألوان:*\n${itemsLine}\n\n*العميل:*\n${cust?.name ?? ''}\n${cust?.mobile ?? ''}\n${cust?.city ?? ''}\n${cust?.address ?? ''}\n${t.morning}/${t.evening}: ${preferredTimeLabel}\n\n*الإجمالي:* ${confirmedOrder.totalPrice} ${t.aed}`
-      : `*New order - Cupify*\n\n${t.orderCode}: ${confirmedOrder.orderCode}\n*Pack:* ${confirmedOrder.packSize} ${t.cups}\n\n*Items:*\n${itemsLine}\n\n*Customer:*\n${cust?.name ?? ''}\n${cust?.mobile ?? ''}\n${cust?.city ?? ''}\n${cust?.address ?? ''}\nPreferred: ${preferredTimeLabel}\n\n*Total:* ${confirmedOrder.totalPrice} ${t.aed}`;
+      ? `*طلب جديد - Cupify*\n\n${t.orderCode}: ${confirmedOrder.orderCode}\n*الحجم:* ${packSizeVal} ${t.cups}\n\n*الألوان:*\n${itemsLine}\n\n*العميل:*\n${customer.name}\n${customer.mobile}\n${customer.city}\n${customer.address}\n${t.morning}/${t.evening}: ${preferredTimeLabel}\n\n*الإجمالي:* ${totalPriceVal} ${t.aed}`
+      : `*New order - Cupify*\n\n${t.orderCode}: ${confirmedOrder.orderCode}\n*Pack:* ${packSizeVal} ${t.cups}\n\n*Items:*\n${itemsLine}\n\n*Customer:*\n${customer.name}\n${customer.mobile}\n${customer.city}\n${customer.address}\nPreferred: ${preferredTimeLabel}\n\n*Total:* ${totalPriceVal} ${t.aed}`;
     const whatsappUrl = `https://wa.me/${(storeSettings?.whatsapp_number || '').replace(/\D/g, '')}?text=${encodeURIComponent(whatsappBody)}`;
 
     return (
