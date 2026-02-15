@@ -685,8 +685,16 @@ const App: React.FC = () => {
   });
   const [agree, setAgree] = useState(false);
   const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
+  const [mobileError, setMobileError] = useState<string | null>(null);
 
   const t = TEXTS[lang];
+  const isValidUaeMobile = (raw: string): boolean => {
+    const digits = raw.replace(/\D/g, '');
+    if (digits.length === 9 && digits.startsWith('5')) return true;   // 50xxxxxxxx
+    if (digits.length === 10 && digits.startsWith('05')) return true; // 050xxxxxxxx
+    if (digits.length === 12 && digits.startsWith('9715')) return true; // 9715xxxxxxxx
+    return false;
+  };
   const isRtl = lang === 'ar';
 
   const imageCacheRef = React.useRef<Map<string, HTMLImageElement>>(new Map());
@@ -919,8 +927,13 @@ const App: React.FC = () => {
 
   const handleConfirmOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMobileError(null);
     if (!customer.name || !customer.mobile || !agree) {
       alert(t.validationError);
+      return;
+    }
+    if (!isValidUaeMobile(customer.mobile)) {
+      setMobileError(t.mobileInvalidUae);
       return;
     }
     setLoading(true);
@@ -942,12 +955,16 @@ const App: React.FC = () => {
   const progressPercent = (step / 2) * 100;
 
   if (confirmedOrder) {
+    // Use local state for items/customer (API may not return them); fallback to confirmedOrder with guards
+    const orderItems = confirmedOrder.items ?? selectedColors;
+    const cust = confirmedOrder.customer ?? customer;
+    const safeItems = Array.isArray(orderItems) ? orderItems : [];
     const getColorName = (code: string) => inventory.find(i => i.colorCode === code)?.[lang === 'ar' ? 'nameAr' : 'nameEn'] || code;
-    const itemsLine = confirmedOrder.items.map(i => `• ${getColorName(i.colorCode)} x${i.qty}`).join('\n');
-    const preferredTimeLabel = confirmedOrder.customer.preferredTime === 'Morning' ? t.morning : t.evening;
+    const itemsLine = safeItems.map((i: OrderItem) => `• ${getColorName(i.colorCode)} x${i.qty}`).join('\n');
+    const preferredTimeLabel = (cust?.preferredTime === 'Evening' ? t.evening : t.morning);
     const whatsappBody = lang === 'ar'
-      ? `*طلب جديد - Cupify*\n\n${t.orderCode}: ${confirmedOrder.orderCode}\n*الحجم:* ${confirmedOrder.packSize} ${t.cups}\n\n*الألوان:*\n${itemsLine}\n\n*العميل:*\n${confirmedOrder.customer.name}\n${confirmedOrder.customer.mobile}\n${confirmedOrder.customer.city}\n${confirmedOrder.customer.address}\n${t.morning}/${t.evening}: ${preferredTimeLabel}\n\n*الإجمالي:* ${confirmedOrder.totalPrice} ${t.aed}`
-      : `*New order - Cupify*\n\n${t.orderCode}: ${confirmedOrder.orderCode}\n*Pack:* ${confirmedOrder.packSize} ${t.cups}\n\n*Items:*\n${itemsLine}\n\n*Customer:*\n${confirmedOrder.customer.name}\n${confirmedOrder.customer.mobile}\n${confirmedOrder.customer.city}\n${confirmedOrder.customer.address}\nPreferred: ${preferredTimeLabel}\n\n*Total:* ${confirmedOrder.totalPrice} ${t.aed}`;
+      ? `*طلب جديد - Cupify*\n\n${t.orderCode}: ${confirmedOrder.orderCode}\n*الحجم:* ${confirmedOrder.packSize} ${t.cups}\n\n*الألوان:*\n${itemsLine}\n\n*العميل:*\n${cust?.name ?? ''}\n${cust?.mobile ?? ''}\n${cust?.city ?? ''}\n${cust?.address ?? ''}\n${t.morning}/${t.evening}: ${preferredTimeLabel}\n\n*الإجمالي:* ${confirmedOrder.totalPrice} ${t.aed}`
+      : `*New order - Cupify*\n\n${t.orderCode}: ${confirmedOrder.orderCode}\n*Pack:* ${confirmedOrder.packSize} ${t.cups}\n\n*Items:*\n${itemsLine}\n\n*Customer:*\n${cust?.name ?? ''}\n${cust?.mobile ?? ''}\n${cust?.city ?? ''}\n${cust?.address ?? ''}\nPreferred: ${preferredTimeLabel}\n\n*Total:* ${confirmedOrder.totalPrice} ${t.aed}`;
     const whatsappUrl = `https://wa.me/${(storeSettings?.whatsapp_number || '').replace(/\D/g, '')}?text=${encodeURIComponent(whatsappBody)}`;
 
     return (
@@ -1150,7 +1167,10 @@ const App: React.FC = () => {
               <form onSubmit={handleConfirmOrder} className="space-y-1.5 sm:space-y-3 w-full max-w-sm mx-auto flex-1 min-h-0 flex flex-col justify-center">
                  <div className="space-y-1.5 sm:space-y-2">
                     <CompactInput compact placeholder={t.fullName} value={customer.name} onChange={v => setCustomer({...customer, name: v})} />
-                    <CompactInput compact placeholder={t.mobile} value={customer.mobile} onChange={v => setCustomer({...customer, mobile: v})} />
+                    <div>
+                      <CompactInput compact placeholder={t.mobile} value={customer.mobile} onChange={v => { setCustomer({...customer, mobile: v}); setMobileError(null); }} />
+                      {mobileError && <p className="text-[10px] sm:text-xs text-red-400 font-bold mt-1">{mobileError}</p>}
+                    </div>
                     <CompactInput compact placeholder={t.city} value={customer.city} onChange={v => setCustomer({...customer, city: v})} />
                     <CompactInput compact placeholder={t.address} value={customer.address} onChange={v => setCustomer({...customer, address: v})} />
                  </div>

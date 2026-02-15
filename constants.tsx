@@ -28,6 +28,7 @@ export const TEXTS = {
     evening: "مساءً",
     agree: "أوافق على الدفع عند المعاينة",
     validationError: "يرجى إكمال البيانات لنتمكن من خدمتك",
+    mobileInvalidUae: "يرجى إدخال رقم جوال إماراتي صحيح (مثال: 0501234567)",
     changePack: "تغيير الطقم",
     randomHint: "تم اختيار ألوان عشوائية لك — يمكنك تغييرها بسهولة!"
   },
@@ -59,6 +60,7 @@ export const TEXTS = {
     evening: "Evening",
     agree: "I agree to pay after inspection",
     validationError: "Please fill all details",
+    mobileInvalidUae: "Please enter a valid UAE mobile number (e.g. 0501234567)",
     changePack: "Change Pack",
     randomHint: "We picked random colors for you — feel free to change them!"
   }
