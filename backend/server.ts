@@ -461,7 +461,24 @@ app.put('/api/admin/settings', async (req: Request, res: Response) => {
   }
 });
 
-registerObjectStorageRoutes(app);
+// Only enable Replit Object Storage when:
+// 1) PRIVATE_OBJECT_DIR is set
+// 2) App is running on Replit (REPL_ID or REPL_SLUG exists)
+
+const isReplit =
+  !!process.env.REPL_ID || !!process.env.REPL_SLUG;
+
+const hasPrivateDir =
+  !!process.env.PRIVATE_OBJECT_DIR &&
+  process.env.PRIVATE_OBJECT_DIR.trim() !== '';
+
+if (isReplit && hasPrivateDir) {
+  console.log('🟣 Using Replit Object Storage');
+  registerObjectStorageRoutes(app);
+} else {
+  console.log('🟢 Using local file upload (Replit storage disabled)');
+}
+
 
 app.get('/api/images', async (req, res) => {
   try {
