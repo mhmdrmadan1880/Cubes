@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Cupify | الحيوية في كل رشفة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --brand-main: #FF4D4D;
+        --brand-vibe: #4834D4;
+        --sat: env(safe-area-inset-top);
+        --sab: env(safe-area-inset-bottom);
+        --sal: env(safe-area-inset-left);
+        --sar: env(safe-area-inset-right);
+      }
+      * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+      html {
+        height: 100%;
+        height: 100dvh;
+        height: -webkit-fill-available;
+        overflow: hidden;
+      }
+      body {
+        font-family: 'Outfit', 'Cairo', sans-serif;
+        background: #000;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+        height: 100dvh;
+        height: -webkit-fill-available;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-text-size-adjust: 100%;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+      }
+      
+      .main-viewport {
+        height: 100%;
+        height: 100dvh;
+        height: -webkit-fill-available;
+        min-height: 0;
+        max-height: 100dvh;
+        max-height: -webkit-fill-available;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .ios-scroll {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+      }
+
+      .vibrant-bg {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(125deg, #130f40 0%, #000000 100%);
+      }
+      .blob {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: var(--brand-main);
+        filter: blur(60px);
+        border-radius: 50%;
+        opacity: 0.25;
+        animation: float-blob 15s infinite alternate;
+      }
+      .blob-2 {
+        background: var(--brand-vibe);
+        right: -30px;
+        top: 20%;
+        animation-duration: 20s;
+      }
+      
+      @keyframes float-blob {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(30px, 60px) scale(1.15); }
+      }
+
+      .glass-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+      }
+
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      .font-arabic { font-family: 'Cairo', sans-serif; }
+      
+      .step-enter { animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .active-glow {
+        box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);
+        border-color: var(--brand-main) !important;
+      }
+
+      .btn-pulse {
+        animation: pulse-btn 2s infinite;
+      }
+      @keyframes pulse-btn {
+        0% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4); }
+        70% { box-shadow: 0 0 0 15px rgba(255, 77, 77, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
+      }
+
+      @keyframes kenburns {
+        0% { transform: scale(1) translate(0, 0); }
+        100% { transform: scale(1.1) translate(-1%, -0.5%); }
+      }
+      .ken-burns {
+        animation: kenburns 6s ease-out infinite alternate;
+      }
+      .progress-bar-anim {
+        animation: progress-fill 3s linear forwards;
+      }
+      @keyframes progress-fill {
+        from { width: 0%; }
+        to { width: 100%; }
+      }
+
+      .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 12px); }
+
+      input, button, select, textarea {
+        font-size: 16px;
+        touch-action: manipulation;
+      }
+
+      @media (max-width: 380px) {
+        .glass-container { border-radius: 18px; }
+      }
+    </style>
+</head>
+  <body>
+    <div class="main-viewport">
+      <div class="vibrant-bg">
+        <div class="blob"></div>
+        <div class="blob blob-2"></div>
+      </div>
+      <div id="root" class="h-full w-full"></div>
+    </div>
+    <script>
+      (function() {
+        function setVH() {
+          var vh = window.innerHeight;
+          document.documentElement.style.setProperty('--app-height', vh + 'px');
+          var mv = document.querySelector('.main-viewport');
+          if (mv) mv.style.height = vh + 'px';
+        }
+        setVH();
+        window.addEventListener('resize', setVH);
+        window.addEventListener('orientationchange', function() { setTimeout(setVH, 100); });
+      })();
+    </script>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

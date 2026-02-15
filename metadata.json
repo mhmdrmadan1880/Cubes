@@ -1,0 +1,7 @@
+{
+  "name": "Cupify - Reserve Your Set",
+  "description": "A high-conversion landing page for selling cup sets with Cash on Delivery (COD) only, featuring real-time stock updates and UAE-targeted design.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
