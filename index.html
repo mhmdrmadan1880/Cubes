@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Cupify | الحيوية في كل رشفة</title>
@@ -9,144 +9,221 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+    <!-- TikTok Pixel Code Start -->
+    <script>
+        !function (w, d, t) {
+            w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie", "holdConsent", "revokeConsent", "grantConsent"], ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }; for (var i = 0; i < ttq.methods.length; i++)ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) {
+                for (
+                    var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++)ttq.setAndDefer(e, ttq.methods[n]); return e
+            }, ttq.load = function (e, n) {
+                var r = "https://analytics.tiktok.com/i18n/pixel/events.js", o = n && n.partner; ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = r, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {}; n = document.createElement("script")
+                    ; n.type = "text/javascript", n.async = !0, n.src = r + "?sdkid=" + e + "&lib=" + t; e = document.getElementsByTagName("script")[0]; e.parentNode.insertBefore(n, e)
+            };
+
+
+            ttq.load('D6AB16BC77UB00O73R50');
+            ttq.page();
+        }(window, document, 'ttq');
+    </script>
+    <!-- TikTok Pixel Code End -->
+    
     <style>
-      :root {
-        --brand-main: #FF4D4D;
-        --brand-vibe: #4834D4;
-        --sat: env(safe-area-inset-top);
-        --sab: env(safe-area-inset-bottom);
-        --sal: env(safe-area-inset-left);
-        --sar: env(safe-area-inset-right);
-      }
-      * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-      html {
-        height: 100%;
-        height: 100dvh;
-        height: -webkit-fill-available;
-        overflow: hidden;
-      }
-      body {
-        font-family: 'Outfit', 'Cairo', sans-serif;
-        background: #000;
-        color: #fff;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        height: 100%;
-        height: 100dvh;
-        height: -webkit-fill-available;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-text-size-adjust: 100%;
-        position: fixed;
-        width: 100%;
-        top: 0;
-        left: 0;
-      }
-      
-      .main-viewport {
-        height: 100%;
-        height: 100dvh;
-        height: -webkit-fill-available;
-        min-height: 0;
-        max-height: 100dvh;
-        max-height: -webkit-fill-available;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-      }
-      
-      .ios-scroll {
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;
-      }
+        :root {
+            --brand-main: #FF4D4D;
+            --brand-vibe: #4834D4;
+            --sat: env(safe-area-inset-top);
+            --sab: env(safe-area-inset-bottom);
+            --sal: env(safe-area-inset-left);
+            --sar: env(safe-area-inset-right);
+        }
 
-      .vibrant-bg {
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background: linear-gradient(125deg, #130f40 0%, #000000 100%);
-      }
-      .blob {
-        position: absolute;
-        width: 200px;
-        height: 200px;
-        background: var(--brand-main);
-        filter: blur(60px);
-        border-radius: 50%;
-        opacity: 0.25;
-        animation: float-blob 15s infinite alternate;
-      }
-      .blob-2 {
-        background: var(--brand-vibe);
-        right: -30px;
-        top: 20%;
-        animation-duration: 20s;
-      }
-      
-      @keyframes float-blob {
-        0% { transform: translate(0, 0) scale(1); }
-        100% { transform: translate(30px, 60px) scale(1.15); }
-      }
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
 
-      .glass-container {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 24px;
-      }
+        html {
+            height: 100%;
+            height: 100dvh;
+            height: -webkit-fill-available;
+            overflow: hidden;
+        }
 
-      .no-scrollbar::-webkit-scrollbar { display: none; }
-      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      .font-arabic { font-family: 'Cairo', sans-serif; }
-      
-      .step-enter { animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
-      @keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
+        body {
+            font-family: 'Outfit', 'Cairo', sans-serif;
+            background: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            height: 100dvh;
+            height: -webkit-fill-available;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-text-size-adjust: 100%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
 
-      .active-glow {
-        box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);
-        border-color: var(--brand-main) !important;
-      }
+        .main-viewport {
+            height: 100%;
+            height: 100dvh;
+            height: -webkit-fill-available;
+            min-height: 0;
+            max-height: 100dvh;
+            max-height: -webkit-fill-available;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
 
-      .btn-pulse {
-        animation: pulse-btn 2s infinite;
-      }
-      @keyframes pulse-btn {
-        0% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4); }
-        70% { box-shadow: 0 0 0 15px rgba(255, 77, 77, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
-      }
+        .ios-scroll {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
 
-      @keyframes kenburns {
-        0% { transform: scale(1) translate(0, 0); }
-        100% { transform: scale(1.1) translate(-1%, -0.5%); }
-      }
-      .ken-burns {
-        animation: kenburns 6s ease-out infinite alternate;
-      }
-      .progress-bar-anim {
-        animation: progress-fill 3s linear forwards;
-      }
-      @keyframes progress-fill {
-        from { width: 0%; }
-        to { width: 100%; }
-      }
+        .vibrant-bg {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(125deg, #130f40 0%, #000000 100%);
+        }
 
-      .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 12px); }
+        .blob {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: var(--brand-main);
+            filter: blur(60px);
+            border-radius: 50%;
+            opacity: 0.25;
+            animation: float-blob 15s infinite alternate;
+        }
 
-      input, button, select, textarea {
-        font-size: 16px;
-        touch-action: manipulation;
-      }
+        .blob-2 {
+            background: var(--brand-vibe);
+            right: -30px;
+            top: 20%;
+            animation-duration: 20s;
+        }
 
-      @media (max-width: 380px) {
-        .glass-container { border-radius: 18px; }
-      }
+        @keyframes float-blob {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(30px, 60px) scale(1.15);
+            }
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .font-arabic {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .step-enter {
+            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .active-glow {
+            box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);
+            border-color: var(--brand-main) !important;
+        }
+
+        .btn-pulse {
+            animation: pulse-btn 2s infinite;
+        }
+
+        @keyframes pulse-btn {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 77, 77, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 77, 77, 0);
+            }
+        }
+
+        @keyframes kenburns {
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+
+            100% {
+                transform: scale(1.1) translate(-1%, -0.5%);
+            }
+        }
+
+        .ken-burns {
+            animation: kenburns 6s ease-out infinite alternate;
+        }
+
+        .progress-bar-anim {
+            animation: progress-fill 3s linear forwards;
+        }
+
+        @keyframes progress-fill {
+            from {
+                width: 0%;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        .pb-safe {
+            padding-bottom: max(env(safe-area-inset-bottom), 12px);
+        }
+
+        input, button, select, textarea {
+            font-size: 16px;
+            touch-action: manipulation;
+        }
+
+        @media (max-width: 380px) {
+            .glass-container {
+                border-radius: 18px;
+            }
+        }
     </style>
 </head>
   <body>
