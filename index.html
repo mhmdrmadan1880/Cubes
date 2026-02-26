@@ -9,9 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
-    
+
     <!-- TikTok Pixel Code Start -->
-    <script>
+    <!--<script>
         !function (w, d, t) {
             w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie", "holdConsent", "revokeConsent", "grantConsent"], ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }; for (var i = 0; i < ttq.methods.length; i++)ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) {
                 for (
@@ -25,8 +25,26 @@
             ttq.load('D6CALCJC77U0SFL8IJV0');
             ttq.page();
         }(window, document, 'ttq');
-    </script>
+    </script>-->
     <!-- TikTok Pixel Code End -->
+
+    <!-- Snap Pixel Code -->
+    <script type='text/javascript'>
+        (function (e, t, n) {
+            if (e.snaptr) return; var a = e.snaptr = function () { a.handleRequest ? a.handleRequest.apply(a, arguments) : a.queue.push(arguments) };
+            a.queue = []; var s = 'script'; r = t.createElement(s); r.async = !0;
+            r.src = n; var u = t.getElementsByTagName(s)[0];
+            u.parentNode.insertBefore(r, u);
+        })(window, document,
+            'https://sc-static.net/scevent.min.js');
+
+        snaptr('init', 'ee83563a-bd21-4a41-85f0-64b6b75096a9', {});
+
+        snaptr('track', 'PAGE_VIEW');
+
+    </script>
+    <!-- End Snap Pixel Code -->
+
 
     <style>
         :root {
@@ -226,27 +244,27 @@
         }
     </style>
 </head>
-  <body>
+<body>
     <div class="main-viewport">
-      <div class="vibrant-bg">
-        <div class="blob"></div>
-        <div class="blob blob-2"></div>
-      </div>
-      <div id="root" class="h-full w-full"></div>
+        <div class="vibrant-bg">
+            <div class="blob"></div>
+            <div class="blob blob-2"></div>
+        </div>
+        <div id="root" class="h-full w-full"></div>
     </div>
     <script>
-      (function() {
-        function setVH() {
-          var vh = window.innerHeight;
-          document.documentElement.style.setProperty('--app-height', vh + 'px');
-          var mv = document.querySelector('.main-viewport');
-          if (mv) mv.style.height = vh + 'px';
-        }
-        setVH();
-        window.addEventListener('resize', setVH);
-        window.addEventListener('orientationchange', function() { setTimeout(setVH, 100); });
-      })();
+        (function () {
+            function setVH() {
+                var vh = window.innerHeight;
+                document.documentElement.style.setProperty('--app-height', vh + 'px');
+                var mv = document.querySelector('.main-viewport');
+                if (mv) mv.style.height = vh + 'px';
+            }
+            setVH();
+            window.addEventListener('resize', setVH);
+            window.addEventListener('orientationchange', function () { setTimeout(setVH, 100); });
+        })();
     </script>
     <script type="module" src="/index.tsx"></script>
-  </body>
+</body>
 </html>
